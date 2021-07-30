@@ -1,5 +1,5 @@
 #!/bin/bash
-prmsg=$1 
+prmsg=$1
 
 patchRegex='^\[(patch|PATCH)\].*$' 
 minorRegex='^\[(minor|MINOR)\].*$' 
@@ -7,13 +7,16 @@ majorRegex='^\[(major|MAJOR)\].*$'
 
 if [[ $prmsg =~ $patchRegex ]]
 then
-	tagit -p
+	ver='p'
 elif [[ $prmsg =~ $minorRegex ]]
 then
-	tagit -m
+	ver='m'
 elif [[ $prmsg =~ $majorRegex ]]
 then
-	tagit -M
+	ver='M'
 else
 	echo "No tag pattern match, won't tag any"
+	exit 0
 fi
+
+git tag $(bumpit -$ver $(git describe --tags --abbrev=0))
